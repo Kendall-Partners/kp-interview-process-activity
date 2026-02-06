@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Records Viewer</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="wrap">
+        <header class="header">
+            <h1>Records Viewer</h1>
+            <p class="sub">Fetching JSON from <code>/api/records</code> and dumping it below.</p>
+        </header>
+
+        <div class="actions">
+            <button id="reload">Reload</button>
+            <span id="status" class="status">Idle</span>
+        </div>
+
+        <pre id="output" class="output">{}</pre>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
+

@@ -78,7 +78,6 @@ Your interface should help the user understand:
 
 - How cashflow evolves over time
 - When capital is deployed vs returned
-- (Optional) cumulative cash position
 
 You may choose to represent time as:
 - Individual events
@@ -116,7 +115,7 @@ The UI should be understandable without explanation.
 - Running total over time
 - Simple bar or list-based view
 
-Do **not** use external charting libraries.
+You **CAN** use external charting libraries.
 
 ---
 
@@ -153,18 +152,21 @@ http://127.0.0.1:5001
 ## Basic Project Structure
 
 ```
-.
-├── routes.py
-├── requirements.txt
-├── setup.sh
-├── .gitignore
-├── data/
-│   └── records.json
-├── templates/
-│   └── index.html
-└── static/
-    ├── script.js
-    └── styles.css
+kp-interview-process-activity/
+├── README.md
+├── app/
+│   ├── routes.py
+│   ├── static/
+│   │   ├── script.js
+│   │   └── styles.css
+│   └── templates/
+│       └── index.html
+├── code/
+│   ├── requirements.txt
+│   └── setup.sh
+└── data/
+    └── records.json
+
 ```
 
 ---

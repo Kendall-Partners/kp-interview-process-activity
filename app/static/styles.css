@@ -9,6 +9,19 @@ body {
     max-width: 900px;
     margin: 0 auto;
     padding: 28px;
+    padding-bottom: 10px;
+}
+
+.chart {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px;
+    padding-top: 0px;
+    box-sizing: border-box;
+    height: 75vh;
+    min-height: 400px;
 }
 
 .header h1 {
@@ -28,12 +41,41 @@ body {
     margin-bottom: 12px;
 }
 
+.reload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 button {
     padding: 10px 14px;
     border: 1px solid #ddd;
     background: white;
     border-radius: 8px;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-cash-in {
+    border-color: rgba(75, 192, 192, 1);
+    color: rgba(75, 192, 192, 1);
+}
+
+.btn-cash-out {
+    border-color: rgba(255, 99, 132, 1);
+    color: rgba(255, 99, 132, 1);
+}
+
+.btn-net-flow {
+    border-color: #333;
+    color: #333;
+}
+
+.toggle-btn.hidden {
+    background: #eee;
+    color: #aaa !important;
+    border-color: #ddd !important;
+    opacity: 0.7;
 }
 
 button:active {
@@ -43,6 +85,7 @@ button:active {
 .status {
     font-size: 13px;
     color: #666;
+    margin-top: 4px;
 }
 
 .output {
@@ -50,8 +93,7 @@ button:active {
     color: #e5e7eb;
     padding: 14px;
     border-radius: 10px;
-    border: 1px solid rgba(0,0,0,0.08);
+    border: 1px solid rgba(0, 0, 0, 0.08);
     overflow: auto;
     min-height: 300px;
 }
-

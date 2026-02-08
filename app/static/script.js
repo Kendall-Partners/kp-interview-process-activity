@@ -99,6 +99,8 @@ function updateChart() {
     const cashIn = [];
     const cashOut = [];
     const netFlow = [];
+    const cumulativeFlow = [];
+    let runningTotal = 0;
 
     sortedKeys.forEach(key => {
         const d = groupedMap.get(key);
@@ -114,13 +116,16 @@ function updateChart() {
         cashIn.push(d.cashIn);
         cashOut.push(d.cashOut);
         netFlow.push(d.netFlow);
+
+        runningTotal += d.netFlow;
+        cumulativeFlow.push(runningTotal);
     });
 
-    renderFinancialChart(labels, cashIn, cashOut, netFlow);
+    renderFinancialChart(labels, cashIn, cashOut, netFlow, cumulativeFlow);
 }
 
 
-function renderFinancialChart(labels, cashInData, cashOutData, netFlowData) {
+function renderFinancialChart(labels, cashInData, cashOutData, netFlowData, cumulativeFlowData) {
     const ctx = document.getElementById("cashflowChart").getContext('2d');
 
     if (myChart) {
@@ -166,10 +171,24 @@ function renderFinancialChart(labels, cashInData, cashOutData, netFlowData) {
                     borderColor: '#333',
                     backgroundColor: '#333',
                     borderWidth: 2,
-                    tension: 0.1,
-                    order: 1,
                     pointRadius: 3,
                     hidden: viewMode === 'daily',
+                    animation: {
+                        duration: 250,
+                        easing: 'easeOutQuint'
+                    }
+                },
+                {
+                    type: 'line',
+                    label: 'Cumulative Income',
+                    data: cumulativeFlowData,
+                    borderColor: '#8e44ad',
+                    backgroundColor: '#8e44ad',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    tension: 0.1,
+                    order: 0,
+                    pointRadius: 0,
                     animation: {
                         duration: 250,
                         easing: 'easeOutQuint'
@@ -245,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Hide the net cash flow by default on daily view.
         if (viewMode === 'daily') {
-            document.querySelectorAll(".toggle-btn")[2].classList.add("hidden");
+            document.querySelectorAll(".toggle-btn")[3].classList.add("hidden");
         }
         updateChart();
     });

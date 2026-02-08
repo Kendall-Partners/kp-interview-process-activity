@@ -71,6 +71,11 @@ button {
     color: #333;
 }
 
+.btn-cumulative-flow {
+    border-color: #8e44ad;
+    color: #8e44ad;
+}
+
 .toggle-btn.hidden {
     background: #eee;
     color: #aaa !important;

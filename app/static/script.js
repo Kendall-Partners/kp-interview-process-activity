@@ -217,7 +217,7 @@ function renderFinancialChart(labels, cashInData, cashOutData, netFlowData, cumu
             maintainAspectRatio: false,
             interaction: {
                 mode: 'index',
-                intersect: false
+                events: ['click']
             },
             scales: {
                 y: {

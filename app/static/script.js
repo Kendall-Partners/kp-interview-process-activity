@@ -4,7 +4,6 @@ let viewMode = 'monthly'; // 'daily' or 'monthly'
 
 async function loadRecords() {
     const statusEl = document.getElementById("status");
-    const outputEl = document.getElementById("cashflowChart");
     statusEl.textContent = "Loading...";
 
     try {
@@ -29,8 +28,9 @@ function updateChart() {
     // --- 1. Flatten into a list of simplified events ---
     let allEvents = [];
 
+    // Standardize each record into cash in and cash out events
     currentPayload.forEach(record => {
-        // Purchase Event
+        // Purchase Event -- Cash OUT
         if (record.Closed_Purchase_Date__c) {
             allEvents.push({
                 date: record.Closed_Purchase_Date__c, // YYYY-MM-DD
@@ -39,7 +39,7 @@ function updateChart() {
             });
         }
 
-        // Rehab Event
+        // Rehab Event -- Cash OUT
         if (record.List_Date__c) {
             allEvents.push({
                 date: record.List_Date__c,
@@ -48,7 +48,7 @@ function updateChart() {
             });
         }
 
-        // Sale Event
+        // Sale Event -- Cash IN
         if (record.Closed_Sale_Date__c) {
             allEvents.push({
                 date: record.Closed_Sale_Date__c,
@@ -62,12 +62,15 @@ function updateChart() {
     // key: date string (YYYY-MM-DD or YYYY-MM), value: { cashIn, cashOut, netFlow, dateObj }
     const groupedMap = new Map();
 
+    // Group events by date
     allEvents.forEach(e => {
         let key;
         const dateObj = new Date(e.date);
 
+        // Skip invalid dates
         if (isNaN(dateObj.getTime())) return;
 
+        // Determine the key based on view mode
         if (viewMode === 'daily') {
             // Use full date string YYYY-MM-DD
             key = e.date;
@@ -77,10 +80,12 @@ function updateChart() {
             key = `${dateObj.getFullYear()}-${month}`;
         }
 
+        // Initialize if not exists
         if (!groupedMap.has(key)) {
             groupedMap.set(key, { cashIn: 0, cashOut: 0, netFlow: 0, sortDate: dateObj });
         }
 
+        // Add to the appropriate bucket
         const data = groupedMap.get(key);
         if (e.amount > 0) {
             data.cashIn += e.amount;
@@ -90,11 +95,12 @@ function updateChart() {
         data.netFlow += e.amount;
     });
 
-    // --- 3. Convert to Sorted Arrays ---
+    // Sort the keys
     const sortedKeys = Array.from(groupedMap.keys()).sort((a, b) => {
         return groupedMap.get(a).sortDate - groupedMap.get(b).sortDate;
     });
 
+    // Prepare data for chart
     const labels = [];
     const cashIn = [];
     const cashOut = [];
@@ -109,18 +115,21 @@ function updateChart() {
         if (viewMode === 'daily') {
             labels.push(key);
         } else {
-            // Format as "Jan 2024" for monthly
+            // Format as "Month YYYY" for monthly
             labels.push(d.sortDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }));
         }
 
+        // Push data to arrays
         cashIn.push(d.cashIn);
         cashOut.push(d.cashOut);
         netFlow.push(d.netFlow);
 
+        // Calculate cumulative flow
         runningTotal += d.netFlow;
         cumulativeFlow.push(runningTotal);
     });
 
+    // Render chart
     renderFinancialChart(labels, cashIn, cashOut, netFlow, cumulativeFlow);
 }
 
@@ -128,14 +137,17 @@ function updateChart() {
 function renderFinancialChart(labels, cashInData, cashOutData, netFlowData, cumulativeFlowData) {
     const ctx = document.getElementById("cashflowChart").getContext('2d');
 
+    // Destroy previous chart if it exists
     if (myChart) {
         myChart.destroy();
     }
 
+    // Chart formatting fun, ft. Chart.js
     myChart = new Chart(ctx, {
         data: {
             labels: labels,
             datasets: [
+                // Cash In
                 {
                     type: 'bar',
                     label: 'Cash In',
@@ -150,6 +162,7 @@ function renderFinancialChart(labels, cashInData, cashOutData, netFlowData, cumu
                         easing: 'easeOutQuint'
                     }
                 },
+                // Cash Out
                 {
                     type: 'bar',
                     label: 'Cash Out',
@@ -164,6 +177,7 @@ function renderFinancialChart(labels, cashInData, cashOutData, netFlowData, cumu
                         easing: 'easeOutQuint'
                     }
                 },
+                // Net Cash Flow
                 {
                     type: 'line',
                     label: 'Net Cash Flow',
@@ -178,6 +192,7 @@ function renderFinancialChart(labels, cashInData, cashOutData, netFlowData, cumu
                         easing: 'easeOutQuint'
                     }
                 },
+                // Cumulative Flow
                 {
                     type: 'line',
                     label: 'Cumulative Income',
@@ -255,6 +270,7 @@ function renderFinancialChart(labels, cashInData, cashOutData, netFlowData, cumu
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("reload").addEventListener("click", loadRecords);
 
+    // Toggle monthly / daily view
     document.getElementById("toggleGrouping").addEventListener("click", (e) => {
         viewMode = viewMode === 'daily' ? 'monthly' : 'daily';
         e.target.textContent = viewMode === 'daily' ? 'Switch to Monthly' : 'Switch to Daily';
@@ -262,7 +278,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Reset dataset toggle buttons
         document.querySelectorAll(".toggle-btn").forEach(btn => btn.classList.remove("hidden"));
 
-        // Hide the net cash flow by default on daily view.
+        // Net cash flow isn't very useful on daily view, so it's hidden by default
         if (viewMode === 'daily') {
             document.querySelectorAll(".toggle-btn")[3].classList.add("hidden");
         }
@@ -270,6 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Toggle buttons
+    // These are redundant, as you can toggle datasets in the legend, but they're here for convenience
     document.querySelectorAll(".toggle-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const index = parseInt(btn.dataset.dataset);
@@ -286,6 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Load records on initial page load
     loadRecords();
 });
 

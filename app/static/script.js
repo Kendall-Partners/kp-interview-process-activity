@@ -204,6 +204,7 @@ function renderFinancialChart(labels, cashInData, cashOutData, netFlowData, cumu
                     tension: 0.1,
                     order: 0,
                     pointRadius: 0,
+                    pointHitRadius: 10,
                     animation: {
                         duration: 250,
                         easing: 'easeOutQuint'
@@ -252,6 +253,18 @@ function renderFinancialChart(labels, cashInData, cashOutData, netFlowData, cumu
                 }
             },
             plugins: {
+                title: {
+                    display: true,
+                    text: viewMode === 'daily' ? 'Cashflow by Day' : 'Cashflow by Month',
+                    font: {
+                        size: 18,
+                        weight: 'bold'
+                    },
+                    padding: {
+                        top: 10,
+                        bottom: 10
+                    }
+                },
                 tooltip: {
                     callbacks: {
                         label: function (context) {
@@ -260,6 +273,16 @@ function renderFinancialChart(labels, cashInData, cashOutData, netFlowData, cumu
                             label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.raw);
                             return label;
                         }
+                    }
+                },
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            weight: 'bold'
+                        },
+                        boxWidth: 20,
+                        boxHeight: 20,
                     }
                 }
             }
@@ -273,36 +296,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Toggle monthly / daily view
     document.getElementById("toggleGrouping").addEventListener("click", (e) => {
         viewMode = viewMode === 'daily' ? 'monthly' : 'daily';
-        e.target.textContent = viewMode === 'daily' ? 'Switch to Monthly' : 'Switch to Daily';
+        e.target.textContent = viewMode === 'daily' ? 'Group by Month' : 'Group by Day';
 
-        // Reset dataset toggle buttons
-        document.querySelectorAll(".toggle-btn").forEach(btn => btn.classList.remove("hidden"));
-
-        // Net cash flow isn't very useful on daily view, so it's hidden by default
-        if (viewMode === 'daily') {
-            document.querySelectorAll(".toggle-btn")[3].classList.add("hidden");
-        }
         updateChart();
     });
-
-    // Toggle buttons
-    // These are redundant, as you can toggle datasets in the legend, but they're here for convenience
-    document.querySelectorAll(".toggle-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const index = parseInt(btn.dataset.dataset);
-            if (myChart) {
-                const isVisible = myChart.isDatasetVisible(index);
-                if (isVisible) {
-                    myChart.hide(index);
-                    btn.classList.add("hidden");
-                } else {
-                    myChart.show(index);
-                    btn.classList.remove("hidden");
-                }
-            }
-        });
-    });
-
     // Load records on initial page load
     loadRecords();
 });

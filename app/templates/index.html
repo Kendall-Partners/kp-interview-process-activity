@@ -14,24 +14,15 @@
     <div class="wrap">
         <header class="header">
             <h1>Cash Flow Chart</h1>
-            <p class="sub">Fetching JSON from <code>/api/records</code> and charting it below.</p>
+            <p class="sub">Interact with the legend elements to toggle datasets.</p>
         </header>
         <div class="actions">
             <div class="actions">
-                <div class="reload-container">
-                    <button id="reload">Reload</button>
-                    <span id="status" class="status">Idle</span>
-                </div>
+                <button id="reload">Reload</button>
+                <span id="status" class="status">Idle</span>
+                <button id="toggleGrouping">Group by Day</button>
             </div>
-            <span>Toggle:</span>
-            <button class="toggle-btn btn-cash-in" data-dataset="0">Cash In</button>
-            <button class="toggle-btn btn-cash-out" data-dataset="1">Cash Out</button>
-            <button class="toggle-btn btn-cumulative-flow" data-dataset="2">Cumulative Flow</button>
-            <button class="toggle-btn btn-net-flow" data-dataset="3">Net Cash Flow</button>
         </div>
-        <button id="toggleGrouping">Switch to Daily</button>
-    </div>
-    <div class="wrap" style="padding-bottom: 0;">
     </div>
     <div class="chart">
         <canvas id="cashflowChart"></canvas>

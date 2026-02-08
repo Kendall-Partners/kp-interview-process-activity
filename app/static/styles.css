@@ -41,12 +41,6 @@ body {
     margin-bottom: 12px;
 }
 
-.reload-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 button {
     padding: 10px 14px;
     border: 1px solid #ddd;
@@ -54,33 +48,6 @@ button {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s;
-}
-
-.btn-cash-in {
-    border-color: rgba(75, 192, 192, 1);
-    color: rgba(75, 192, 192, 1);
-}
-
-.btn-cash-out {
-    border-color: rgba(255, 99, 132, 1);
-    color: rgba(255, 99, 132, 1);
-}
-
-.btn-net-flow {
-    border-color: #333;
-    color: #333;
-}
-
-.btn-cumulative-flow {
-    border-color: #8e44ad;
-    color: #8e44ad;
-}
-
-.toggle-btn.hidden {
-    background: #eee;
-    color: #aaa !important;
-    border-color: #ddd !important;
-    opacity: 0.7;
 }
 
 button:active {
@@ -91,14 +58,4 @@ button:active {
     font-size: 13px;
     color: #666;
     margin-top: 4px;
-}
-
-.output {
-    background: #0f172a;
-    color: #e5e7eb;
-    padding: 14px;
-    border-radius: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    overflow: auto;
-    min-height: 300px;
 }

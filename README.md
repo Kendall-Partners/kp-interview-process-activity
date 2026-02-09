@@ -1,4 +1,5 @@
 # kp-interview-process-activity
+TESTING
 This project is a **small, local Flask application** designed to visualize **real-estate cashflow over time** using a fixed dataset.
 
 You will build a simple interface that helps a user understand **cash in vs cash out across the lifecycle of real-estate transactions**.

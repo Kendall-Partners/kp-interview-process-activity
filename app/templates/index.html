@@ -1,28 +1,31 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Records Viewer</title>
+    <title>Cash Flow Chart</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 </head>
+
 <body>
     <div class="wrap">
         <header class="header">
-            <h1>Records Viewer</h1>
-            <p class="sub">Fetching JSON from <code>/api/records</code> and dumping it below.</p>
+            <h1>Cash Flow Chart</h1>
+            <p class="sub">Interact with the legend and chart elements to change the view.</p>
         </header>
-
         <div class="actions">
             <button id="reload">Reload</button>
             <span id="status" class="status">Idle</span>
+            <button id="toggleGrouping">Group by Day</button>
         </div>
-
-        <pre id="output" class="output">{}</pre>
     </div>
-
+    <div class="chart">
+        <canvas id="cashflowChart"></canvas>
+    </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
-</html>
 
+</html>

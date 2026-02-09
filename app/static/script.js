@@ -25,7 +25,7 @@ async function loadRecords() {
 function updateChart() {
     if (!currentPayload) return;
 
-    // --- 1. Flatten into a list of simplified events ---
+    // --- Flatten into a list of simplified events ---
     let allEvents = [];
 
     // Standardize each record into cash in and cash out events
@@ -58,7 +58,7 @@ function updateChart() {
         }
     });
 
-    // --- 2. Create Map for Aggregation based on View Mode ---
+    // --- Create Map for Aggregation based on View Mode ---
     // key: date string (YYYY-MM-DD or YYYY-MM), value: { cashIn, cashOut, netFlow, dateObj }
     const groupedMap = new Map();
 
@@ -100,7 +100,7 @@ function updateChart() {
         return groupedMap.get(a).sortDate - groupedMap.get(b).sortDate;
     });
 
-    // Prepare data for chart
+    // --- Prepare data for charting ---
     const labels = [];
     const cashIn = [];
     const cashOut = [];
@@ -158,8 +158,7 @@ function renderFinancialChart(labels, cashInData, cashOutData, netFlowData, cumu
                     order: 2,
                     stack: 'flow',
                     animation: {
-                        duration: 150,
-                        easing: 'easeOutQuint'
+                        duration: 0
                     }
                 },
                 // Cash Out
@@ -173,8 +172,7 @@ function renderFinancialChart(labels, cashInData, cashOutData, netFlowData, cumu
                     order: 2,
                     stack: 'flow',
                     animation: {
-                        duration: 150,
-                        easing: 'easeOutQuint'
+                        duration: 0
                     }
                 },
                 // Net Cash Flow
@@ -188,8 +186,7 @@ function renderFinancialChart(labels, cashInData, cashOutData, netFlowData, cumu
                     pointRadius: 3,
                     hidden: viewMode === 'daily',
                     animation: {
-                        duration: 250,
-                        easing: 'easeOutQuint'
+                        duration: 0
                     }
                 },
                 // Cumulative Flow
@@ -206,8 +203,7 @@ function renderFinancialChart(labels, cashInData, cashOutData, netFlowData, cumu
                     pointRadius: 0,
                     pointHitRadius: 10,
                     animation: {
-                        duration: 250,
-                        easing: 'easeOutQuint'
+                        duration: 0
                     }
                 }
             ]
@@ -282,7 +278,24 @@ function renderFinancialChart(labels, cashInData, cashOutData, netFlowData, cumu
                             weight: 'bold'
                         },
                         boxWidth: 20,
-                        boxHeight: 20,
+                        boxHeight: 20
+                    },
+                    onClick: function (e, legendItem, legend) {
+                        const index = legendItem.datasetIndex;
+                        const ci = legend.chart;
+
+                        if (ci.isDatasetVisible(index)) {
+                            let visibleCount = 0;
+                            for (let i = 0; i < ci.data.datasets.length; i++) {
+                                if (ci.isDatasetVisible(i)) visibleCount++;
+                            }
+                            if (visibleCount <= 1) {
+                                // If only one dataset is visible, do nothing
+                                return;
+                            }
+                        }
+                        ci.setDatasetVisibility(index, !ci.isDatasetVisible(index));
+                        ci.update();
                     }
                 }
             }

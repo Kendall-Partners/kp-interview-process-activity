@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Records Viewer</title>
+    <title>Cash Flow Chart</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
@@ -17,11 +17,9 @@
             <p class="sub">Interact with the legend and chart elements to change the view.</p>
         </header>
         <div class="actions">
-            <div class="actions">
-                <button id="reload">Reload</button>
-                <span id="status" class="status">Idle</span>
-                <button id="toggleGrouping">Group by Day</button>
-            </div>
+            <button id="reload">Reload</button>
+            <span id="status" class="status">Idle</span>
+            <button id="toggleGrouping">Group by Day</button>
         </div>
     </div>
     <div class="chart">
